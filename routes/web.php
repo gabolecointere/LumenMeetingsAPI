@@ -20,25 +20,27 @@ $app->group(['prefix' => 'api/v1'], function() use ($app) {
   $app->GET('meeting', [
     'uses' => 'MeetingController@index'
   ]);
-  $app->POST('meeting', [
-    'uses' => 'MeetingController@store'
-  ]);
   $app->GET('meeting/{id}', [
     'uses' => 'MeetingController@show'
   ]);
-  $app->PATCH('meeting/{id}', [
+  $app->group(['middleware' => 'auth'], function() use($app){
+    $app->POST('meeting', [
+      'uses' => 'MeetingController@store'
+    ]);
+    $app->PATCH('meeting/{id}', [
     'uses' => 'MeetingController@update'
-  ]);
-  $app->DELETE('meeting/{id}', [
-    'uses' => 'MeetingController@destroy'
-  ]);
-  //Registration in meeting related routes
-  $app->POST('meeting/registration', [
-    'uses' => 'RegistrationController@store'
-  ]);
-  $app->DELETE('meeting/registration/{id}', [
-    'uses' =>'RegistrationController@destroy'
-  ]);
+    ]);
+    $app->DELETE('meeting/{id}', [
+      'uses' => 'MeetingController@destroy'
+    ]);
+    //Registration in meeting related routes
+    $app->POST('meeting/registration', [
+      'uses' => 'RegistrationController@store'
+    ]);
+    $app->DELETE('meeting/registration/{id}', [
+      'uses' =>'RegistrationController@destroy'
+    ]);
+  });
   //User authentication related routes
   $app->POST('user', [
     'uses' => 'AuthController@store'
