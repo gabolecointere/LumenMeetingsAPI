@@ -15,37 +15,39 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['prefix' => 'api/v1'], function() use ($app) {
-  //Meeting related routes
-  $app->GET('meeting', [
-    'uses' => 'MeetingController@index'
-  ]);
-  $app->GET('meeting/{id}', [
-    'uses' => 'MeetingController@show'
-  ]);
-  $app->group(['middleware' => 'auth'], function() use($app){
-    $app->POST('meeting', [
-      'uses' => 'MeetingController@store'
+$app->group(['middleware' => 'cors'], function() use ($app) {
+  $app->group(['prefix' => 'api/v1'], function() use ($app) {
+    //Meeting related routes
+    $app->GET('meeting', [
+      'uses' => 'MeetingController@index'
     ]);
-    $app->PATCH('meeting/{id}', [
-    'uses' => 'MeetingController@update'
+    $app->GET('meeting/{id}', [
+      'uses' => 'MeetingController@show'
     ]);
-    $app->DELETE('meeting/{id}', [
-      'uses' => 'MeetingController@destroy'
+    $app->group(['middleware' => 'auth'], function() use($app){
+      $app->POST('meeting', [
+        'uses' => 'MeetingController@store'
+      ]);
+      $app->PATCH('meeting/{id}', [
+      'uses' => 'MeetingController@update'
+      ]);
+      $app->DELETE('meeting/{id}', [
+        'uses' => 'MeetingController@destroy'
+      ]);
+      //Registration in meeting related routes
+      $app->POST('meeting/registration', [
+        'uses' => 'RegistrationController@store'
+      ]);
+      $app->DELETE('meeting/registration/{id}', [
+        'uses' =>'RegistrationController@destroy'
+      ]);
+    });
+    //User authentication related routes
+    $app->POST('user', [
+      'uses' => 'AuthController@store'
     ]);
-    //Registration in meeting related routes
-    $app->POST('meeting/registration', [
-      'uses' => 'RegistrationController@store'
-    ]);
-    $app->DELETE('meeting/registration/{id}', [
-      'uses' =>'RegistrationController@destroy'
+    $app->POST('user/signin', [
+      'uses' => 'AuthController@signin'
     ]);
   });
-  //User authentication related routes
-  $app->POST('user', [
-    'uses' => 'AuthController@store'
-  ]);
-  $app->POST('user/signin', [
-    'uses' => 'AuthController@signin'
-  ]);
 });
