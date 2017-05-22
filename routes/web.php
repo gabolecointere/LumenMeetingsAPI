@@ -15,7 +15,7 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['middleware' => 'cors'], function() use ($app) {
+
   $app->group(['prefix' => 'api/v1'], function() use ($app) {
     //Meeting related routes
     $app->GET('meeting', [
@@ -50,4 +50,3 @@ $app->group(['middleware' => 'cors'], function() use ($app) {
       'uses' => 'AuthController@signin'
     ]);
   });
-});
